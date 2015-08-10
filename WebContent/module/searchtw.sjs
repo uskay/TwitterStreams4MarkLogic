@@ -1,5 +1,3 @@
-
-
 var searchText = function(reqKeywords, limit){
     var q = new Array();
     if(reqKeywords){

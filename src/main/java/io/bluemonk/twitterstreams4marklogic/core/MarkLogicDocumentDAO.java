@@ -43,7 +43,7 @@ public class MarkLogicDocumentDAO {
             for (MatchDocumentSummary result: resultsHandle.getMatchResults()) {
                 MarkLogicConnection.getJsonManager().delete(result.getUri());
             }
-            System.out.println("Delete done!! --> " + resultsHandle.getMatchResults().length);
+            //System.out.println("Delete done!! --> " + resultsHandle.getMatchResults().length);
         } catch (Exception e) {
             //tx.rollback();
             MarkLogicConnectionException myException = new MarkLogicConnectionException("Expired tweet delete failed!! --> " + e.getMessage());
