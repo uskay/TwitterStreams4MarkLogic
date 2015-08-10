@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.5.1/rickshaw.min.js"></script>
     <style>
-        body {
+        html, body {
             font: 10px sans-serif;
             margin: 0px;
             padding: 0px;
@@ -35,7 +35,7 @@
             z-index: 99;
             width:100%;
             height:100%;
-            background-color:#000;
+            background-color:#1f6ef5;
             opacity: 0.5;
             position: fixed;
             top: 0;
@@ -61,25 +61,67 @@
         .metric {
             padding-right: 10px;
         }
+        #filter{
+            border: none;
+            width:400px;
+            padding:10px;
+            border-radius: 5px;
+            margin: 0 auto;
+            display: block;
+            margin-top: 20px;
+            color: #222;
+        }
+        #tweets {
+            margin: 0 auto; width:420px;
+        }
+        .tweet {
+            margin-top: 10px;
+        }
+        .userImg {
+            border-radius: 5px;
+            float: left;
+            width:20px
+        }
+        .userName {
+            color: #FFF;
+            height:20px;
+            line-height: 20px;
+            margin-left:5px;
+            float:left;
+        }
+        .tweetText {
+            width:420px;
+            margin-top:10px;
+            clear: both;
+            color: #FFF;
+        }
     </style>
     <script>
+
+        /**
+         *  members
+         */
         var data = [];
         var index = 0;
-
         var graph;
         var maxIndex = 10;
+        var currentKeyword = "";
         for (var i=0; i<maxIndex; i++) {
             data.push({ x: i, y: 0});
             index++;
         }
+        var searchTimer;
 
+        /**
+         *  methods
+         */
         var constructGraph = function(){
             if($("#chart")){
                 $("#chart").remove();
             }
             $("body").append($("<div id='chart'></div>"));
-            var windowWidth = $(window).width();
-            var windowHeight = $(window).height();
+            var windowWidth = $(document).width();
+            var windowHeight = $(document).height();
             graph = new Rickshaw.Graph( {
                 element: document.querySelector("#chart"),
                 width: windowWidth,
@@ -120,32 +162,85 @@
             });
         }
 
+        var separate = function(num){
+            return String(num).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+        }
+
+        var searchTw = function(keyword){
+            clearInterval(searchTimer);
+            var param = "";
+            var url = location.href.replace("index.html", "") + "module/searchtw.sjs";
+            if(keyword){
+                param = "keywords=" + keyword;
+            } else {
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: param,
+                success: function(data){
+                    $("#tweets").empty();
+                    for(var i=0; i<data.length; i++){
+                        var newTweet = createTweet(data[i].imgURL, data[i].username, data[i].text);
+                        $("#tweets").append(newTweet);
+                    }
+                    searchTimer = setInterval(function(){
+                        searchTw(currentKeyword);
+                    }, 10000);
+                }
+            });
+        }
+
+        var createTweet = function(imgURL, username, text){
+            var tweet = $("<div class='tweet'></div>");
+            tweet.append($("<img class='userImg' src='" + imgURL + "'></img>"));
+            tweet.append($("<div class='userName'>" + username + "</div>"));
+            tweet.append($("<div class='tweetText'>" + text + "</div>"));
+            return tweet;
+        }
+
+        /**
+         *  event hook
+         */
         $(window).resize(function(){
             constructGraph();
         });
 
-        var separate = function(num){
-            return String(num).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
-        }
+        $(window).keyup(function(event) {
+            var keyword = $("#filter").val();
+            if(keyword && keyword.trim() && keyword != currentKeyword){
+                currentKeyword = keyword;
+                searchTw(keyword);
+            }
+            if(keyword == ""){
+                currentKeyword = keyword;
+                $("#tweets").empty();
+            }
+        });
 
 
     </script>
 </head>
 <body>
+<a href="https://github.com/uskay/TwitterStreams4MarkLogic"><img style="position: absolute; top: 0; left: 0; border: 0; z-index: 100;" src="https://camo.githubusercontent.com/c6286ade715e9bea433b4705870de482a654f78a/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png"></a>
 <div id="cover"></div>
 <div id="main">
     <img id="logo" src="img/twittersterams.png" width="500">
     <div id="metrics">
-        <span id="persec" class="metric"></span>
-        <span id="permin" class="metric"></span>
-        <span id="perhour"></span>
+        <span id="persec" class="metric">10 tws/sec,</span>
+        <span id="permin" class="metric">1000 tws/sec,</span>
+        <span id="perhour">100000 tws/sec</span>
+    </div>
+    <input id="filter" type="text" placeholder="Filter tweet">
+    <div id="tweets">
     </div>
 </div>
 
 <script>
     constructGraph();
     setInterval(function(){
-        countTw();
+        countTw($("#filter").val());
     }, 1000);
 </script>
 </body>
