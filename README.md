@@ -7,5 +7,5 @@ Since I wanted to make something that has both "real-time" and "big-data" aspect
 ![tw_model](https://raw.githubusercontent.com/uskay/TwitterStreams4MarkLogic/master/WebContent/img/tw_model.png)
 
 ##Trailer
-A screen capture of the live website.<br>
+A screen capture of the live website with annotations for function description.<br>
 [http://youtu.be/_y-xsLOeLO0](http://youtu.be/_y-xsLOeLO0)
