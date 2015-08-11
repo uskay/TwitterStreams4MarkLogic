@@ -1,5 +1,5 @@
 # TwitterSTREAMS
-I was interested in [MarkLogic](http://jp.marklogic.com/) in the way that it is buzzing around the internet on behalf of **"The only enterprise NoSQL database"**. This application is a sample App to understand MarkLogic more deeply.
+I was interested in [MarkLogic](http://jp.marklogic.com/) in the way that it is buzzing around the internet on behalf of **"The only enterprise NoSQL database"**. This application is a sample App to understand MarkLogic more deeply.<br><br>
 ![tw_img](https://raw.githubusercontent.com/uskay/TwitterStreams4MarkLogic/master/WebContent/img/tw_img.png)
 
 ##What is TwitterSTREAMS?
