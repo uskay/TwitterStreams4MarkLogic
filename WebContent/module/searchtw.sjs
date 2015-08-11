@@ -11,7 +11,6 @@ var searchText = function(reqKeywords, limit){
     return fn.subsequence(cts.search(cts.andQuery(q), cts.indexOrder(cts.elementReference("timestamp_ms"), "descending")), 1, limit);
 }
 
-var currentTimeMillis = new Date().getTime();
 var reqKeywords = xdmp.getRequestField("keywords");
 var results = searchText(reqKeywords, 5);
 var array = new Array();
