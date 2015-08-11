@@ -9,3 +9,8 @@ Since I wanted to make something that has both "real-time" and "big-data" aspect
 ##Trailer
 A screen capture of the live website with annotations for function description.<br>
 [http://youtu.be/_y-xsLOeLO0](http://youtu.be/_y-xsLOeLO0)
+
+##Libraries used
+- [Rickshaw](http://code.shutterstock.com/rickshaw/) for drawing graphs
+- [Twitter4j](http://twitter4j.org/en/index.html) for handling Twitter Streaming API
+- [JQuery](https://jquery.com/) ...you wouldn't need any explanation on this lib
