@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <title></title>
+    <script>
+        var getSID = function(){
+            return location.href.split("?")[1];
+        }
+
+
+        var getMsg = function(){
+            var sid = getSID();
+            var url = location.href.split("?")[0].replace("admin.html", "") + "module/admin/getmsg.sjs";
+            var param = {};
+            param["sid"] = sid;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: param,
+                success: function(data){
+                    if(!data){
+                        return;
+                    }
+                    $("#msgboard").empty();
+                    for(var i=0; i<data.length; i++) {
+
+                        var div = $("<div class='msg' style='width:290px; padding:5px; background-color: #fcdba2'>");
+
+                        div.append($("<div class='msgbody'>" + data[i].owner + " - " + data[i].msg + "</div>"));
+                        div.append($("<div class='msgmenuwrapper'>[<span class='msgmenu modify'>modify</span> / <span class='msgmenu delete'>delete</span> ]</div>"));
+
+                        var modwrapper = $("<div class='modwrapper' style='width:100%; height:32px; background-color: #FFF; text-align: left; line-height:2.0; margin-top:5px;'></div>")
+                        modwrapper.append($("<input type='text' class='modmsg' style='width:230px; height:25px; margin-top:2px; margin-left:2px;background-color: #FFF; border: none; float:left;' placeholder='Modify your message'>"));
+                        modwrapper.append($("<div class='modsubmit' style='cursor:pointer;width:40px;height:25px; line-height:2.5;background-color: #4279ee; font-size:8pt; text-align: center; border-radius: 5px; float:right; margin:4px 5px 5px 0px; color:#FFF'>Mod</div>"));
+
+                        div.append(modwrapper);
+                        if(data[i].owner == "@uskay"){
+                            div.css("background-color", "#a4d6f1");
+                        }
+                        div.attr("_mid", data[i].mid);
+                        div.attr("_owner", data[i].owner);
+                        $("#msgboard").prepend(div);
+                    }
+                    $(".msg").hover(
+                            function(){
+                                if($(this).attr("_owner") == "@uskay"){
+                                    return;
+                                }
+                                $(this).css("background-color", "#fcc647");
+                                $(".msgmenuwrapper", this).css("display", "block");
+                            },
+                            function(){
+                                $(this).css("background-color", "#fcdba2");
+                                $(".msgmenuwrapper", this).css("display", "none");
+                                $(".modwrapper", this).css("display", "none");
+                            }
+                    )
+                    $(".delete").click(function(){
+                        deleteMsg($(this).parent().parent().attr("_mid"));
+                    });
+                    $(".modify").click(function(){
+                        $(".modwrapper", $(this).parent().parent()).css("display", "block");
+                    });
+                    $(".modsubmit").click(function(){
+                        var msg = $(".modmsg", $(this).parent()).val();
+                        var mid = $(this).parent().parent().attr("_mid");
+                        var owner = $(this).parent().parent().attr("_owner");
+                        updateMsg(msg, mid, owner);
+                    })
+                    $("#newpost").css("display", "none");
+                }
+            });
+        }
+        var postMsg = function(){
+            var sid = getSID();
+            var url = location.href.split("?")[0].replace("admin.html", "") + "module/admin/postmsg.sjs";
+            var param = {};
+            param["sid"] = sid;
+            param["msg"] = $("#newmsg").val();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: param,
+                success: function(data){
+                    $("#newmsg").val("");
+                    getMsg();
+                }
+            });
+        }
+
+        var updateMsg = function(msg, mid, owner) {
+            var sid = getSID();
+            var url = location.href.split("?")[0].replace("admin.html", "") + "module/updatemsg.sjs";
+            var param = {};
+            param["sid"] = sid;
+            param["mid"] = mid;
+            param["msg"] = msg;
+            param["owner"] = owner;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: param,
+                success: function(data){
+                    getMsg();
+                }
+            });
+        }
+
+        var deleteMsg = function(mid) {
+            var sid = getSID();
+            var url = location.href.split("?")[0].replace("admin.html", "") + "module/deletemsg.sjs";
+            var param = {};
+            param["sid"] = sid;
+            param["mid"] = mid;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: param,
+                success: function(data){
+                    getMsg();
+                }
+            });
+        }
+    </script>
+    <style>
+        :focus
+        {
+            outline: 0;
+        }
+        #send:hover{
+            opacity:0.8;
+        }
+        .modsubmit:hover{
+            opacity:0.8;
+        }
+        .msgmenuwrapper {
+            margin-top:5px;
+            display: none;
+        }
+        .msgmenu {
+            color:#4279ee;
+            cursor: pointer;
+        }
+        .modwrapper {
+            display: none;
+        }
+        #newpost {
+            cursor: pointer;
+        }
+        #newpost:hover {
+            opacity:0.8;
+        }
+    </style>
+</head>
+<body>
+<div style="width:100%; background-color: #222222; border-radius: 5px 5px 0px 0px; font-family:Montserrat">
+    <div style="width:100%; height:30px; background-color: #4279ee; border-radius: 5px 5px 0px 0px; text-align: center; line-height:2.0; color:#FFF">
+        Your offers...
+    </div>
+    <div id="msgboard" style="width:100%; height:250px; background-color: #dfdfdf;overflow-y: scroll; font-size:10pt; ">
+    </div>
+    <div style="width:100%; height:45px; background-color: #FFF; text-align: left; line-height:2.0">
+        <input type="text" id="newmsg" style="width:100%; height:25px; margin-top:10px; margin-left:10px;background-color: #FFF; border: none; " placeholder="Type your message">
+        <div id="send" style="cursor:pointer;width:100%;height:30px; line-height:2.5;background-color: #4279ee; font-size:10pt; text-align: center; border-radius: 5px; margin:10px 10px 5px 0px; color:#FFF">Send</div>
+    </div>
+    <div id="modifyWrapper" style=""></div>
+    <script>
+        $("#send").click(function(){
+            var msg = $("#newmsg").val();
+            if(msg && msg.trim()){
+                postMsg();
+            }
+        });
+        $("#newpost").click(function(){
+            getMsg()
+        })
+        getMsg();
+    </script>
+</div>
+</body>
+</html>
