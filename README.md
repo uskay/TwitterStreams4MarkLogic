@@ -14,3 +14,11 @@ A screen capture of the live website with annotations for function description.<
 - [Rickshaw](http://code.shutterstock.com/rickshaw/) for drawing graphs
 - [Twitter4j](http://twitter4j.org/en/index.html) for handling Twitter Streaming API
 - [JQuery](https://jquery.com/) ...you wouldn't need any explanation on this lib
+
+##Add on feature: Messenger
+Since I was not using much of update methods provided by MarkLogic, I additionally developed a feature: **Messenger**, which is integrated right in the main TwitterSTREAMS and actually does CRUD operation + Web API(MANDRILL) requests to communicate with me.<br><br>
+![messenger_img](https://raw.githubusercontent.com/uskay/TwitterStreams4MarkLogic/master/WebContent/img/messenger_img.png)
+###Component Model
+![messenger](https://raw.githubusercontent.com/uskay/TwitterStreams4MarkLogic/master/WebContent/img/messenger.png)
+###Trailer for Messenger
+[https://youtu.be/m9P1fiLGYsc](https://youtu.be/m9P1fiLGYsc)
