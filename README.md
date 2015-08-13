@@ -18,7 +18,9 @@ A screen capture of the live website with annotations for function description.<
 ##Add on feature: Messenger
 Since I was not using much of update methods provided by MarkLogic, I additionally developed a feature: **Messenger**, which is integrated right in the main TwitterSTREAMS and actually does CRUD operation + Web API(MANDRILL) requests to communicate with me.<br><br>
 ![messenger_img](https://raw.githubusercontent.com/uskay/TwitterStreams4MarkLogic/master/WebContent/img/messenger_img.png)
-###Component Model
+###Component Model for Messenger
+You can use this messenger like a chat room which lasts during your session. If you enter the website with a different session(ie. session expired, different client..), you will start with a whole new conversation.
 ![messenger](https://raw.githubusercontent.com/uskay/TwitterStreams4MarkLogic/master/WebContent/img/messenger.png)
 ###Trailer for Messenger
+A screen capture of the live website with annotations for function description.<br>
 [https://youtu.be/m9P1fiLGYsc](https://youtu.be/m9P1fiLGYsc)
